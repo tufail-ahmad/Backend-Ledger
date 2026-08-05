@@ -14,11 +14,11 @@ exports.register = async (username, email, password) => {
 };
 
 exports.login = async (email, password) => {
-  const user = await userRepository.findByEmail(email);
+  const user = await userRepository.findByEmailWithPassword(email);
   if (!user) {
     throw new apiError(401, "Invalid email or password");
   }
-  console.log("User found:", user); // Debugging line to check if user is found
+
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
     throw new apiError(401, "Invalid email or password");
@@ -28,7 +28,7 @@ exports.login = async (email, password) => {
     expiresIn: "7d",
   });
   const accessToken = jwt.sign({ id: user._id }, config.JWT_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "1d",
   });
   return { accessToken, refreshToken, user };
 };

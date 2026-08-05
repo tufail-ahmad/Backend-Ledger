@@ -1,10 +1,12 @@
 const asyncHandler = require("../utils/asyncHandler");
 const userService = require("../services/user.service");
+const emailService = require("../services/email.service");
 
 exports.register = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
   const user = await userService.register(username, email, password);
   res.status(201).json({ message: "User registered successfully", data: user });
+  await emailService.sendRegistrationEmail(user.email, user.username);
 });
 
 exports.login = asyncHandler(async (req, res) => {

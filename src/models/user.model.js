@@ -22,6 +22,12 @@ const userSchema = new mongoose.Schema(
       trim: true,
       select: false, // Exclude password from query results by default
     },
+    systemUser: {
+      type: Boolean,
+      default: false,
+      immutable: true, // Prevent updates to this field after creation
+      select: false,
+    },
   },
   { timestamps: true },
 );
